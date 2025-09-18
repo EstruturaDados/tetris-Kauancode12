@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 typedef struct {
-    char tipo[30];
+    char tipo;
     int id;
 } Peca;
 
@@ -15,11 +17,15 @@ typedef struct {
     int total;
 } Fila;
 
+int proximoId = 1;
+
 void inicializarFila(Fila *f) {
     f->inicio = 0;
     f->fim = 0;
     f->total = 0;
 }
+    
+
 
 int filaCheia(Fila *f) {
     return f->total == MAX;
@@ -27,6 +33,16 @@ int filaCheia(Fila *f) {
 
 int filaVazia(Fila *f) {
     return f->total = 0;
+}
+
+Peca gerarPeca() {
+    char tipos[] = {'I', 'O', 'T', 'L'};
+    Peca nova;
+    nova.tipo = tipos[rand() % 4];
+    nova.id = proximoId++;
+
+    return nova;
+
 }
 
 void inserir(Fila *f, Peca p) {
@@ -59,4 +75,20 @@ void exibirFila(Fila *f) {
     }
 
     printf("\n");
+}
+
+int main() {
+    Fila fila;
+    inicializarFila(&fila);
+    srand(time(NULL));
+
+    for (int i = 0; i < MAX; i++) {
+        inserir(&fila, gerarPeca());
+    }
+
+    int opcao;
+    
+    do
+
+    return 0;
 }
