@@ -56,22 +56,24 @@ void inserir(Fila *f, Peca p) {
     f->total++;
 }
 
-void remover(Fila *f, Peca *p) {
+Peca remover(Fila *f, Peca *p) {
+    Peca removida = {'-', -1};
     if (filaVazia(f)) {
         printf("Fila vazia. Não é possivel remover.\n");
-        return;
+        return removida;
     }
 
     *p = f->itens[f->inicio];
     f->inicio = (f->inicio + 1) % MAX;
     f->total--;
+    return *p;
 }
 
 void exibirFila(Fila *f) {
     printf("Fila: ");
 
     for (int i = 0, idx = f->inicio; i < f->total; i++, idx = (idx + 1) % MAX) {
-        printf("[%s, %d] ", f->itens[idx].tipo, f->itens[idx].id);
+        printf("[%c, %d] ", f->itens[idx].tipo, f->itens[idx].id);
     }
 
     printf("\n");
@@ -79,6 +81,7 @@ void exibirFila(Fila *f) {
 
 int main() {
     Fila fila;
+    Peca jogada;
     inicializarFila(&fila);
     srand(time(NULL));
 
@@ -88,7 +91,45 @@ int main() {
 
     int opcao;
     
-    do
+    do {
+        printf("\n=== MENU ===\n");
+        printf("1. Exibir fila\n");
+        printf("2. Jogar peça\n");
+        printf("3. Adicionar nova peça\n");
+        printf("0. Sair\n");
+        printf("Escolha: ");
+        scanf("%d", &opcao);
+
+        switch(opcao) {
+            case 1:
+                exibirFila(&fila);
+                break;
+
+            case 2:
+                Peca jogada = remover(&fila, &jogada);
+                if (jogada.id != -1)
+                printf("Peça jogada: [%c - id:%d]\n", jogada.tipo, jogada.id);
+                exibirFila(&fila);
+                break;
+
+            case 3:
+                if (!filaCheia(&fila)) {
+                    Peca nova = gerarPeca();
+                    inserir(&fila, nova);
+                    printf("Peça adicionada: [%c - id:%d]\n", nova.tipo, nova.id);
+                }
+                exibirFila(&fila);
+                break;
+
+            case 0:
+                printf("Saindo...\n");
+                break;
+
+            default:
+                printf("Escolha inválida.\n");
+                break;
+        }
+    } while(opcao != 0);
 
     return 0;
 }
