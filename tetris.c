@@ -19,6 +19,12 @@ typedef struct {
 
 int proximoId = 1;
 
+void pausar() {
+    printf("\nPressione ENTER para prosseguir...");
+        while(getchar() != '\n');
+        getchar();
+}
+
 void inicializarFila(Fila *f) {
     f->inicio = 0;
     f->fim = 0;
@@ -53,7 +59,7 @@ void inserir(Fila *f, Peca p) {
 Peca remover(Fila *f) {
     Peca removida = {'-', -1};
     if (filaVazia(f)) {
-        printf("Fila vazia. Não é possivel remover.\n");
+        printf("\nFila vazia. Não é possivel remover.\n");
         return removida;
     }
 
@@ -71,12 +77,7 @@ void exibirFila(Fila *f) {
     }
 
     printf("\n");
-}
-
-void pausar() {
-    printf("\nPressione ENTER para prosseguir...");
-        getchar();
-        getchar();
+    pausar();
 }
 
 int main() {
@@ -102,14 +103,25 @@ int main() {
 
         switch(opcao) {
             case 1:
-                exibirFila(&fila);
+                if (filaVazia(&fila)) {
+                    printf("\nFila vazia, Nada a exibir.\n");
+                    pausar();
+                } else {
+                    exibirFila(&fila);
+                }
                 break;
 
             case 2:
                 Peca jogada = remover(&fila);
                 if (jogada.id != -1)
                 printf("\nPeça jogada: [%c - id:%d]\n", jogada.tipo, jogada.id);
+
+                if (filaVazia(&fila)) {
+                    printf("\nFila vazia, nada a exibir\n");
+                    pausar();
+                } else {
                 exibirFila(&fila);
+                }
                 break;
 
             case 3:
@@ -124,7 +136,7 @@ int main() {
                 break;
 
             case 0:
-                printf("Saindo...\n");
+                printf("\nSaindo...\n");
                 break;
 
             default:
