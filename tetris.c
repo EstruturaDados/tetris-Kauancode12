@@ -25,14 +25,12 @@ void inicializarFila(Fila *f) {
     f->total = 0;
 }
     
-
-
 int filaCheia(Fila *f) {
     return f->total == MAX;
 }
 
 int filaVazia(Fila *f) {
-    return f->total = 0;
+    return f->total == 0;
 }
 
 Peca gerarPeca() {
@@ -46,37 +44,39 @@ Peca gerarPeca() {
 }
 
 void inserir(Fila *f, Peca p) {
-    if (filaCheia(f)) {
-        printf("Fila cheia. Não é possível inserir.\n");
-        return;
-    }
 
     f->itens[f->fim] = p;
     f->fim = (f->fim + 1) % MAX;
     f->total++;
 }
 
-Peca remover(Fila *f, Peca *p) {
+Peca remover(Fila *f) {
     Peca removida = {'-', -1};
     if (filaVazia(f)) {
         printf("Fila vazia. Não é possivel remover.\n");
         return removida;
     }
 
-    *p = f->itens[f->inicio];
+    removida = f->itens[f->inicio];
     f->inicio = (f->inicio + 1) % MAX;
     f->total--;
-    return *p;
+    return removida;
 }
 
 void exibirFila(Fila *f) {
-    printf("Fila: ");
+    printf("\nFila: ");
 
     for (int i = 0, idx = f->inicio; i < f->total; i++, idx = (idx + 1) % MAX) {
         printf("[%c, %d] ", f->itens[idx].tipo, f->itens[idx].id);
     }
 
     printf("\n");
+}
+
+void pausar() {
+    printf("\nPressione ENTER para prosseguir...");
+        getchar();
+        getchar();
 }
 
 int main() {
@@ -106,17 +106,19 @@ int main() {
                 break;
 
             case 2:
-                Peca jogada = remover(&fila, &jogada);
+                Peca jogada = remover(&fila);
                 if (jogada.id != -1)
-                printf("Peça jogada: [%c - id:%d]\n", jogada.tipo, jogada.id);
+                printf("\nPeça jogada: [%c - id:%d]\n", jogada.tipo, jogada.id);
                 exibirFila(&fila);
                 break;
 
             case 3:
-                if (!filaCheia(&fila)) {
+                if (filaCheia(&fila)) {
+                    printf("\nFila cheia. Não é possível inserir.\n");
+                } else {
                     Peca nova = gerarPeca();
                     inserir(&fila, nova);
-                    printf("Peça adicionada: [%c - id:%d]\n", nova.tipo, nova.id);
+                    printf("\nPeça adicionada: [%c - id:%d]\n", nova.tipo, nova.id);
                 }
                 exibirFila(&fila);
                 break;
