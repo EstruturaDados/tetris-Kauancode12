@@ -12,7 +12,7 @@ typedef struct {
 #define MAX 5
 
 // Cria a struct Fila com 'int inicio', 'fim' e 'total'.
-// Cria itens com o tamanho de 'MAX'.
+// Cria 'itens' com o tamanho de 'MAX'.
 typedef struct {
     Peca itens[MAX];
     int inicio;
@@ -69,9 +69,6 @@ void inserir(Fila *f, Peca p) {
 // Remove a peça que representa o inicio da fila.
 Peca remover(Fila *f) {
     Peca removida = {'-', -1};
-    if (filaVazia(f)) {
-        printf("\nFila vazia, não é possivel remover.\n"); // Se a fila estiver vazia exibe "não é possivel remover".
-    }
 
     removida = f->itens[f->inicio];
     f->inicio = (f->inicio + 1) % MAX;// Avança o índice 'inicio', se passar do final do vetor volta para a posição 0 (comportamento circular).
@@ -81,6 +78,7 @@ Peca remover(Fila *f) {
 
 // Mostra o estado atual da fila.
 void exibirFila(Fila *f) {
+
     printf("\nFila: ");
 
     // Loop 'for' percorre cada posição enquanto (i < f->total), exibindo as posições ocupadas por peças.
@@ -96,7 +94,7 @@ int main() {
     Fila fila;
     Peca jogada;
     inicializarFila(&fila); // Inicializa a fila chamando a função responsável.
-    srand(time(NULL)); // Criação de peças com mais aleatoriedade
+    srand(time(NULL)); // Criação de peças com mais aleatoriedade.
 
     // Loop 'for' que inicia o programa automaticamente com a fila cheia de peças.
     for (int i = 0; i < MAX; i++) {
@@ -126,15 +124,16 @@ int main() {
                 break;
 
             case 2: // Remove e exibe qual foi removida conforme 'jogada'.
-                Peca jogada = remover(&fila);
-                if (jogada.id != -1)
-                printf("\nPeça jogada: [%c - id:%d]\n", jogada.tipo, jogada.id);
-
+                if (!filaVazia(&fila)) {
+                    Peca jogada = remover(&fila);
+                    if (jogada.id != -1)
+                    printf("\nUltima peça jogada: [%c - ID: %d]\n", jogada.tipo, jogada.id);
+                }
                 if (filaVazia(&fila)) {
-                    printf("\nFila vazia, nada a exibir\n"); // Se estiver vazia exibe "nada a exibir".
+                    printf("\nFila vazia, nada mais a remover ou exibir\n"); // Se estiver vazia exibe "nada mais a remover ou exibir".
                     pausar();
                 } else {
-                exibirFila(&fila); // Exibe a fila caso tenha peças.
+                    exibirFila(&fila); // Exibe a fila caso tenha peças.
                 }
                 break;
 
@@ -144,7 +143,7 @@ int main() {
                 } else {
                     Peca nova = gerarPeca(); // Caso tenha espaço gera uma nova peça.
                     inserir(&fila, nova);
-                    printf("\nPeça adicionada: [%c - id:%d]\n", nova.tipo, nova.id); // Exibe qual peça foi adicionada conforme 'nova'.
+                    printf("\nPeça adicionada: [%c - ID: %d]\n", nova.tipo, nova.id); // Exibe qual peça foi adicionada conforme 'nova'.
                 }
                 exibirFila(&fila); // Exibe o estado atual da fila a cada inserção.
                 break;
